@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const referalSchema = new mongoose.Schema({
+const referralSchema = new mongoose.Schema({
     studentName: { type: String, required: true },
     studentEmail: { type: String, required: true },
     companyName: { type: String, required: true },
@@ -10,5 +10,5 @@ const referalSchema = new mongoose.Schema({
     referralLink: { type: String }
 }, { timestamps: true });
 
-const Referal = mongoose.model("Referal", referalSchema);
-export default Referal;
+const Referral = mongoose.model("Referral", referralSchema);
+export default Referral;

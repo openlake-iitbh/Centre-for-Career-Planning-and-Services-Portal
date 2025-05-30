@@ -7,11 +7,11 @@ import router from "./routes/router.js";
 import authRoutes from "./routes/auth.routes.js";
 import threadRoutes from "./routes/thread.routes.js";
 import statsRouter from "./routes/stats.routes.js";
-import referalRouter from "./routes/referal.routes.js";
+import referalRouter from "./routes/referral.routes.js";
 import resumeRouter from "./routes/resume.routes.js";
 
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({});
 
 const port = process.env.PORT || 3000;
 
@@ -38,5 +38,5 @@ app.use("/api/resume",resumeRouter);
 
 app.listen(port, () => {
   connectDB();
-  console.log("Server is running at the port 3000");
+  console.log(`Server is running at the port ${port}`);
 });

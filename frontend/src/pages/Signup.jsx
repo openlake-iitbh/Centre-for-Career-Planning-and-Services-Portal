@@ -40,30 +40,52 @@ function Signup() {
                     <label className="label p-2">
                         <span className='text-base  label-text'>Name</span>
                     </label>
-                    <input type="text" placeholder="Enter Your name" className="w-full input input-bordered h-10"
-                        value={inputs.name} onChange={(e) => setInputs({ ...inputs, name: e.target.value })} />
+                    <input 
+                    type="text" 
+                    placeholder="Enter Your name" 
+                    autoComplete="name"
+                    className="w-full input input-bordered h-10"
+                    value={inputs.name} 
+                    onChange={(e) => setInputs({ ...inputs, name: e.target.value })} 
+                    />
                 </div>
                 <div>
                     <label className="label p-2">
                         <span className='text-base  label-text'>Email</span>
                     </label>
-                    <input type="text" placeholder="Enter email" className="w-full input input-bordered h-10"
-                        value={inputs.email} onChange={(e) => setInputs({ ...inputs, email: e.target.value })} />
+                    <input 
+                    type="text" 
+                    placeholder="Enter email" 
+                    autoComplete="email"
+                    className="w-full input input-bordered h-10"
+                    value={inputs.email} 
+                    onChange={(e) => setInputs({ ...inputs, email: e.target.value })} 
+                    />
                 </div>
                 <div>
                     <label className="label p-2">
                         <span className='text-base  label-text'>Password</span>
                     </label>
-                    <input type="password" placeholder="Enter Password" className="w-full input input-bordered h-10"
-                        value={inputs.password} onChange={(e) => setInputs({ ...inputs, password: e.target.value })} id='password'
+                    <input 
+                    type="password" 
+                    placeholder="Enter Password" 
+                    autoComplete="new-password"
+                    className="w-full input input-bordered h-10"
+                    value={inputs.password} 
+                    onChange={(e) => setInputs({ ...inputs, password: e.target.value })} id='password'
                     />
                 </div>
                 <div>
                     <label className="label p-2">
                         <span className='text-base  label-text'>Confirm Password</span>
                     </label>
-                    <input type="password" placeholder="Confirm Password" className="w-full input input-bordered h-10"
-                        value={inputs.confirmPassword} onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })} id='confirmPassword'
+                    <input 
+                    type="password" 
+                    placeholder="Confirm Password" 
+                    autoComplete="new-password"
+                    className="w-full input input-bordered h-10"
+                    value={inputs.confirmPassword} 
+                    onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })} id='confirmPassword'
                     />
                 </div>
                 <div>

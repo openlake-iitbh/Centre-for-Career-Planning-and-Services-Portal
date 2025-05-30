@@ -3,9 +3,9 @@ import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 import dotenv from "dotenv";
-dotenv.config({});
 import { sendVerificationEmail, sendPasswordResetEmail, sendPasswordResetSuccessEmail } from "../utils/emails.js";
 
+dotenv.config();
 
 
 export const signup = async (req, res) => {
@@ -20,6 +20,7 @@ export const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const verificationToken = Math.floor(100000 + (Math.random() * 900000)).toString();
+        console.log("Generated verification code (signup):", verificationToken);
 
         const userData = {
             name,
@@ -33,7 +34,8 @@ export const signup = async (req, res) => {
         const newUser = new User(userData);
         const savedUser = await newUser.save();
 
-        await sendVerificationEmail(res, newUser.email, verificationToken);
+        // await sendVerificationEmail(res, newUser.email, verificationToken);
+        await sendVerificationEmail(newUser.email, verificationToken);
 
         // generateTokenAndSetCookie(newUser._id, res);
         // commented the above line because we need to verify the email first then set the cookie
@@ -84,11 +86,11 @@ export const verifyEmail = async (req, res) => {
     try {
         const { userId, code } = req.body;
 
-        const stringCode = code.toString();
-
         if (!userId || !code) {
             return res.status(400).json({ success: false, message: 'Missing Details' });
         }
+
+        const stringCode = code.toString();
 
         const user = await User.findOne({
             _id: userId,
