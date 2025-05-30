@@ -13,13 +13,29 @@ export const signup = async (req, res) => {
         const { name, email, password, role } = req.body;
         const user = await User.findOne({ email });
 
+        const verificationToken = Math.floor(100000 + (Math.random() * 900000)).toString();
+
         if (user) {
-            return res.status(400).json({ success: false, message: "User already exists" });
+            if(user.isVerified){
+                return res.status(400).json({ success: false, message: "User already exists" });
+            }
+            const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+
+                user.name = name; 
+                user.password = hashedPassword;
+                user.verificationToken = verificationToken;
+                user.verificationTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+
+                await user.save();
+
+                await sendVerificationEmail(user.email, verificationToken);
+
+                return res.status(200).json({ success: true, userId: user._id });
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const verificationToken = Math.floor(100000 + (Math.random() * 900000)).toString();
         console.log("Generated verification code (signup):", verificationToken);
 
         const userData = {
@@ -70,7 +86,7 @@ export const sendCodeAgain = async (req, res) => {
 
         await user.save();
 
-        await sendVerificationEmail(res, user.email, verificationToken);
+        await sendVerificationEmail(user.email, verificationToken);
 
         res.status(200).json({ success: true, message: 'New verification code sent' });
 
