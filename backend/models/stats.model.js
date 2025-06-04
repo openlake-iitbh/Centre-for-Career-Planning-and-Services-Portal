@@ -1,6 +1,6 @@
-import mongoos from 'mongoose';
+import mongoose from 'mongoose';
 
-const statsSchema = new mongoos.Schema({
+const statsSchema = new mongoose.Schema({
     sectors: {
         type:Map,
         of:Number,
@@ -37,6 +37,6 @@ const statsSchema = new mongoos.Schema({
     }
 })
 
-const Stats = mongoos.model("Stats",statsSchema);
+const Stats = mongoose.model("Stats",statsSchema);
 
 export default Stats;

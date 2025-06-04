@@ -1,13 +1,16 @@
 //impoting all the necessary dependencies and functions
-import mongoose, { connect } from "mongoose";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 //making the connect database function
 const connectDB = async () => {
   try {
-    await mongoose.connect(
+    await mongoose.connect(process.env.MONGODB_URI
       //using the mongodb uri
       // "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.8"
-      "mongodb://localhost:27017/ccps-portal-krishna",
+      // "mongodb://localhost:27017/ccps-portal-krishna",
+      
     );
     console.log("MongoDB database is connected successfully");
   } catch (error) {

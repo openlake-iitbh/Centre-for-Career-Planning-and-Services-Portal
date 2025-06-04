@@ -1,5 +1,5 @@
 import express from "express";
-import { requestReferral, provideReferral, getReferrals, deleteReferral } from "../controllers/referal.controller.js";
+import { requestReferral, provideReferral, getReferrals, deleteReferral } from "../controllers/referral.controller.js";
 
 const router = express.Router();
 

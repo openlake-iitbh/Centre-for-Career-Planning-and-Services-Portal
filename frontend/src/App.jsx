@@ -38,7 +38,7 @@ function App() {
         <Route path='/login' element={authUser ? <Navigate to='/' /> : <Login/>}/>
         <Route path='/signup' element={authUser ? <Navigate to='/' /> : <Signup/>}/>
         <Route path='/analytics' element={<AnalyticsDashboard/>}/>
-        <Route path='/referals' element={<Referrals/>}/>
+        <Route path='/referrals' element={<Referrals/>}/>
         <Route path='/resumebuilder' element={<ResumeBuilder/>} />
         {!authUser && <Route path='/reset-password/:resetToken' element={<ResetPasswordPage />} />}
       </Routes>

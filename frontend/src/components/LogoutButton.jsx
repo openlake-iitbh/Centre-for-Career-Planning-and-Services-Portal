@@ -4,9 +4,11 @@ import useLogout from '../api/useLogout';
 const LogoutButton = () => {
   const {loading, logout} = useLogout()
   return (
-    <div className='w-full text-lg font-lato text-white bg-[#05F2DB] py-3 hover:bg-[#05F2C7]'>
+    <div >
       {!loading ? (
-        <button onClick={logout}>Logout</button>
+        <button className='w-full text-lg font-lato text-white bg-[#13665b] py-3 hover:bg-[#05F2C7] rounded-lg' onClick={logout}>
+          Logout
+        </button>
       ) : (
         <span className='loading loading-spinner'></span>
       )
