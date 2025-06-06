@@ -17,7 +17,7 @@ const DiscussionForum = () => {
       <div className="flex h-screen">
         <Sidebar />
 
-        <section className="relative min-h-screen bg-gray-100 flex-1 flex flex-col items-center overflow-y-auto">
+        <section className="relative pt-16 md:pt-0 min-h-screen bg-gray-100 flex-1 flex flex-col items-center overflow-y-auto ">
           {/* Threads List */}
           <div className="w-full max-w-5xl p-4 space-y-3 overflow-y-auto">
             {[...threads].reverse().map((thread) => (

@@ -88,7 +88,7 @@ const useThreadStore = () => {
 
         setLoading(true);
         try {
-            const res = await fetch(`${backendUrl}/api/threads//createComment/${commentData.threadId}`, {
+            const res = await fetch(`${backendUrl}/api/threads/createComment/${commentData.threadId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
