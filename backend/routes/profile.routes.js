@@ -3,7 +3,7 @@ import { getStudentProfile, updateStudentProfile } from '../controllers/profile.
 import { protectRoute } from '../middleware/auth.middleware.js'; 
 
 const router = express.Router();
-
+  
 router.get('/profile/:userId', protectRoute, getStudentProfile);
 router.post('/profile/:userId', protectRoute, updateStudentProfile);
 

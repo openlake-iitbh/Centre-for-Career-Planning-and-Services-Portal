@@ -39,7 +39,7 @@ export const updateStudentProfile = async (req, res) => {
     const { name, email, discipline, program, cgpa } = req.body;
 
     const student = await Student.findOne({ StudentID: studentID });
-    if (!student) {
+    if (!student) {  
       return res.status(404).json({ message: "Student not found" });
     }
 

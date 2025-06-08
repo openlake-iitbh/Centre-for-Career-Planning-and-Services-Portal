@@ -12,7 +12,7 @@ router.route("").get();
 router.post("/jobs",jobCreate)
 router.put("/jobs/:id",jobUpdate)
 router.delete("/jobs/:id",jobDelete)
-router.get('/jobs', jobList);
+router.get('/jobs', jobList);  
 router.get('/jobs/upvote/:id',jobRelevanceScoreUpvote)
 router.get('/jobs/downvote/:id',jobRelevanceScoreDownvote)
 

@@ -51,7 +51,7 @@ const studentSchema = new mongoose.Schema({
     Batch:{
         type:Number,
         required:true
-    },
+    },  
     SavedJobs:[{
         type:mongoose.Schema.Types.ObjectID,
         ref:'JobPosting'
