@@ -1,10 +1,29 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
+
+    
+    ReferenceObject:{
+        type:mongoose.Schema.Types.ObjectID,
+        ref:'User'
+    },
+
+
     Discipline:{
         type: String,
         required: true
     },
+    Program: {
+        type: String,
+        default: ''
+    },
+    CGPA: {
+        type: Number,
+        min: 0,
+        max: 10,
+        default: null
+    },
+
     // job status true if he is seeking off-campus placements
     Jobstatus:[{
         JobRerenceID:{
@@ -37,10 +56,7 @@ const studentSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectID,
         ref:'JobPosting'
     }],
-    ReferenceObject:{
-        type:mongoose.Schema.Types.ObjectID,
-        ref:'User'
-    }
+
 },{timestamps:true})
 
 const Student = mongoose.model("Student",studentSchema);
