@@ -4,7 +4,7 @@ import { protectRoute } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
   
-router.get('/profile/:userId', protectRoute, getStudentProfile);
-router.post('/profile/:userId', protectRoute, updateStudentProfile);
+router.get('/', protectRoute, getStudentProfile);
+router.post('/', protectRoute, updateStudentProfile);
 
 export default router;

@@ -1,12 +1,11 @@
 import User from "../models/user.model.js";
 import Student from "../models/student.model.js";
 
-// Get profile info for a student by studentID
 export const getStudentProfile = async (req, res) => {
   try {
-    const { studentID } = req.params;
+    const { userId } = req.params;
 
-    const student = await Student.findOne({ StudentID: studentID }).populate('ReferenceObject');
+    const student = await Student.findOne({ userId: userId }).populate('ReferenceObject');
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -32,13 +31,12 @@ export const getStudentProfile = async (req, res) => {
   }
 };
 
-// Update profile info for a student by studentID
 export const updateStudentProfile = async (req, res) => {
   try {
-    const { studentID } = req.params;
+    const { userId } = req.params;
     const { name, email, discipline, program, cgpa } = req.body;
 
-    const student = await Student.findOne({ StudentID: studentID });
+    const student = await Student.findOne({ userId: userId });
     if (!student) {  
       return res.status(404).json({ message: "Student not found" });
     }
