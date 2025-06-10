@@ -44,9 +44,9 @@ const Thread = ({ thread }) => {
 
 
   return (
-    <div className="border border-gray-300 rounded-lg p-4 mb-4 shadow-sm bg-white">
+    <div className="border border-gray-300 rounded-lg p-4 mb-4 shadow-sm  bg-white">
       <h3 className="text-lg font-semibold text-gray-800">{thread.title}</h3>
-      <div className='flex justify-between'>
+      <div className='flex flex-col md:flex-row justify-between'>
         <p className="text-gray-700">{thread.text}</p>
         {renderFile()}
       </div>
