@@ -8,7 +8,7 @@ const Comment = ({comment, threadAuthor}) => {
     const isImage = comment.file.match(/\.(jpeg|jpg|png|gif)$/i);
 
     if (isImage) {
-      return <img src={comment.file} alt="Comment Attachment" className="w-24 h-auto rounded-lg mt-2" />;
+      return <img src={comment.file} width={400} alt="Comment Attachment" className="h-auto rounded-lg mt-2" />;
     }
 
     return null;
