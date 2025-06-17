@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import LogoutButton from './LogoutButton.jsx';
 import { useAuthContext } from '../context/AuthContext';
 
 const AllLinks = [
-  { name: 'Home',           link: '/home',            user: 'all'     },
+  { name: 'Home',           link: '/',            user: 'all'     },
   { name: 'Profile',        link: '/profile',         user: 'all'     },
   { name: 'Applications',   link: '/applications',    user: 'all'     },
   { name: 'Saved Apps',     link: '/saved-applications', user: 'all'   },
@@ -19,10 +19,14 @@ const Sidebar = () => {
   const { authUser } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  // only show links for “all” users or matching role
   const links = AllLinks.filter(
     (l) => l.user === 'all' || l.user === authUser?.role
   );
+
+  const navLinkClass = ({ isActive }) =>
+    `block px-6 py-3 font-montserrat hover:bg-[#13665b] ${
+      isActive ? 'bg-[#13665b] text-white font-semibold' : 'text-white'
+    }`;
 
   return (
     <>
@@ -31,7 +35,7 @@ const Sidebar = () => {
         <Link to="/" className="flex items-center">
           <img src="/images/CCPS.png" alt="Logo" className="h-10 w-10" />
           <span className="ml-3 text-xl font-montserrat">CCPS</span>
-        </Link>
+        </NavLink>
         <button
           onClick={() => setIsOpen((o) => !o)}
           className="p-2 hover:bg-[#13665b] rounded"
@@ -50,23 +54,21 @@ const Sidebar = () => {
 
       {/* MOBILE DRAWER */}
       <div
-        className={`
-          md:hidden fixed top-16 left-0 w-64 bg-[#0fa18e] h-[calc(100vh-4rem)]
-          transform transition-transform duration-300 z-30
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
+        className={`md:hidden fixed top-16 left-0 w-64 bg-[#0fa18e] h-[calc(100vh-4rem)] transform transition-transform duration-300 z-30 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <nav className="flex flex-col h-full justify-between py-4">
           <div>
             {links.map((l) => (
-              <Link
+              <NavLink
                 key={l.name}
                 to={l.link}
-                className="block px-6 py-3 font-montserrat text-white hover:bg-[#13665b]"
+                className={navLinkClass}
                 onClick={() => setIsOpen(false)}
               >
                 {l.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
           <div className="px-6">
@@ -78,19 +80,19 @@ const Sidebar = () => {
       {/* ─── DESKTOP SIDEBAR ───────────────────────────────────────── */}
       <aside className="hidden md:flex fixed top-0 left-0 h-full w-64 bg-[#0fa18e] flex-col justify-between py-8">
         <div>
-          <Link to="/" className="flex items-center px-6 mb-8">
+          <NavLink to="/" className="flex items-center px-6 mb-8">
             <img src="/images/CCPS.png" alt="Logo" className="h-10 w-10" />
             <span className="ml-3 text-2xl font-montserrat text-white">CCPS</span>
-          </Link>
+          </NavLink>
           <nav className="flex flex-col">
             {links.map((l) => (
-              <Link
+              <NavLink
                 key={l.name}
                 to={l.link}
-                className="block px-6 py-3 font-montserrat text-white hover:bg-[#13665b]"
+                className={navLinkClass}
               >
                 {l.name}
-              </Link>
+              </NavLink>
             ))}
           </nav>
         </div>
@@ -101,9 +103,7 @@ const Sidebar = () => {
 
       {/* ─── PAGE CONTENT WRAPPER ──────────────────────────────────── */}
       <div className="md:pl-64 pt-16">
-        {/* If you’re nesting routes, render children here: */}
         <Outlet />
-        {/* Otherwise, render your page’s main content */}
       </div>
     </>
   );

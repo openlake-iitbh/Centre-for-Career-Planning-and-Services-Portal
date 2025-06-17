@@ -7,6 +7,7 @@ import Experience from '../components/ResumeBuilder/Experience';
 import Skills from '../components/ResumeBuilder/Skills';
 import Project from '../components/ResumeBuilder/Project';
 import Certifications from '../components/ResumeBuilder/Certifications';
+import toast from 'react-hot-toast';
 
 function ResumeBuilder() {
     const { generateResume, loading } = useResume();
@@ -74,8 +75,54 @@ function ResumeBuilder() {
         });
     };
 
+    const isValidForm = () => {
+        const { personalInfo, education, experience, skills } = formData;
+
+        if (!personalInfo.name.trim() || !personalInfo.email.trim() || !personalInfo.phone.trim()) {
+            toast.error("Please fill out all personal information.");
+            return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(personalInfo.email)) {
+            toast.error("Invalid email format.");
+            return false;
+        }
+
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(personalInfo.phone)) {
+            toast.error("Phone number should be 10 digits.");
+            return false;
+        }
+
+        if (skills.length === 0 || skills.some(skill => !skill.trim())) {
+            toast.error("Please enter at least one skill.");
+            return false;
+        }
+
+        for (let edu of education) {
+            if (!edu.institution.trim() || !edu.degree.trim() || !edu.startDate.trim() || !edu.endDate.trim()) {
+                toast.error("All education entries must be fully filled out.");
+                return false;
+            }
+        }
+
+        for (let exp of experience) {
+            if (!exp.company.trim() || !exp.position.trim() || !exp.startDate.trim() || !exp.endDate.trim()) {
+                toast.error("All experience entries must be fully filled out.");
+                return false;
+            }
+    }
+
+    return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!isValidForm()) {
+        toast.error("Please fill all required fields.");
+        return;
+    }
         await generateResume(formData);
     };
 
@@ -85,7 +132,7 @@ function ResumeBuilder() {
             <div className="flex-1 p-6 overflow-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-semibold text-slate-800">Resume Builder</h1>
-                    <button
+                    {/* <button
                         type="button"
                         onClick={handleSubmit}
                         disabled={loading}
@@ -93,7 +140,7 @@ function ResumeBuilder() {
                             }`}
                     >
                         {loading ? 'Generating...' : 'Generate Resume'}
-                    </button>
+                    </button> */}
                 </div>
 
                 <form onSubmit={handleSubmit}>
