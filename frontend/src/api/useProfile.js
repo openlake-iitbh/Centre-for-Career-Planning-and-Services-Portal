@@ -1,11 +1,9 @@
 const BASE_URL = "http://localhost:3000/api/profile";
 
-export const getStudentProfile = async (token) => {
+export const getStudentProfile = async () => {
   const res = await fetch(BASE_URL, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -15,13 +13,13 @@ export const getStudentProfile = async (token) => {
   return await res.json();
 };
 
-export const updateStudentProfile = async (data, token) => {
+export const updateStudentProfile = async (data) => {
   const res = await fetch(BASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
+    credentials: "include",
     body: JSON.stringify(data),
   });
 
