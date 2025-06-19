@@ -40,7 +40,6 @@ app.use("/api/stats",statsRouter);
 app.use("/api/referrals",referalRouter);
 app.use("/api/resume",resumeRouter);
 
-
 app.listen(port, () => {
   connectDB();
   console.log(`Server is running at the port ${port}`);

@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="flex min-h-screen bg-base-200">
       <Sidebar />
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 pt-16 md:pt-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-primary">Welcome to the CCPS Portal 🎓</h1>
