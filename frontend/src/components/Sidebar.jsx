@@ -11,8 +11,9 @@ const AllLinks = [
   { name: 'Saved Apps',     link: '/saved-applications', user: 'all'   },
   { name: 'Analytics',      link: '/analytics',       user: 'all'     },
   { name: 'Referrals',      link: '/referrals',        user: 'all'     },
-  { name: 'Resume Builder', link: '/resumebuilder',   user: 'student' },
-  { name: 'Discussion Forum', link: '/discussion-forum',   user: 'student' },
+  { name: 'Resume Builder', link: '/resumebuilder',   user: 'all' },
+  { name: 'Discussion Forum', link: '/discussion-forum',   user: 'all' },
+  { name: 'alumni', link: '/alumni',   user: 'all' },
 ];
 
 const Sidebar = () => {
