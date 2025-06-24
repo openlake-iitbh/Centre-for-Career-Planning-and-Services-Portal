@@ -20,6 +20,7 @@ import VerifyEmail from './components/VerifyEmail';
 import DiscussionForum from './pages/DiscussionForum';
 import AddThread from './components/AddThread';
 import Profile from './pages/Profile';
+import Alumni from './pages/Alumni';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -42,6 +43,7 @@ function App() {
         <Route path='/analytics' element={<AnalyticsDashboard/>}/>
         <Route path='/referrals' element={<Referrals/>}/>
         <Route path='/resumebuilder' element={<ResumeBuilder/>} />
+        <Route path='/alumni' element={<Alumni/>} />
         {!authUser && <Route path='/reset-password/:resetToken' element={<ResetPasswordPage />} />}
       </Routes>
       <Toaster />

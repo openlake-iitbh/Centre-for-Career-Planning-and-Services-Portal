@@ -22,7 +22,13 @@ const alumniSchema = new mongoose.Schema({
     Email:{
         type: String,
         required: true
-    }
+    },
+    jobs: [
+        {
+            id: { type: String, required: true },
+            role: { type: String, required: true }
+        }
+    ]
 })
 
 const Alumni = mongoose.model("Alumni", alumniSchema);
