@@ -23,6 +23,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 const sendPasswordResetEmail = async (email, resetURL) => {
     try {
+        // console.log("email",email)
         const mailOptions = {
             from: process.env.SMTP_SENDER_EMAIL,
             to: email,

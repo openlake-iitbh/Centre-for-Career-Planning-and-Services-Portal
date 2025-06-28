@@ -10,8 +10,10 @@ const AllLinks = [
   { name: 'Applications',   link: '/applications',    user: 'all'     },
   { name: 'Saved Apps',     link: '/saved-applications', user: 'all'   },
   { name: 'Analytics',      link: '/analytics',       user: 'all'     },
-  { name: 'Referrals',      link: '/referals',        user: 'all'     },
-  { name: 'Resume Builder', link: '/resumebuilder',   user: 'student' },
+  { name: 'Referrals',      link: '/referrals',        user: 'all'     },
+  { name: 'Resume Builder', link: '/resumebuilder',   user: 'all' },
+  { name: 'Discussion Forum', link: '/discussion-forum',   user: 'all' },
+  { name: 'alumni', link: '/alumni',   user: 'all' },
 ];
 
 const Sidebar = () => {
@@ -30,7 +32,7 @@ const Sidebar = () => {
   return (
     <>
       {/* ─── MOBILE TOP BAR ─────────────────────────────────────────── */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-[#0fa18e] text-white px-4 flex items-center justify-between z-30">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-[#0fa18e] text-white px-4 flex items-center justify-between z-10">
         <NavLink to="/" className="flex items-center">
           <img src="/images/CCPS.png" alt="Logo" className="h-10 w-10" />
           <span className="ml-3 text-xl font-montserrat">CCPS</span>
@@ -77,7 +79,7 @@ const Sidebar = () => {
       </div>
 
       {/* ─── DESKTOP SIDEBAR ───────────────────────────────────────── */}
-      <aside className="hidden md:flex fixed top-0 left-0 h-full w-64 bg-[#0fa18e] flex-col justify-between py-8 z-10">
+      <aside className="hidden md:flex fixed top-0 left-0 h-full w-64 bg-[#0fa18e] flex-col justify-between py-8">
         <div>
           <NavLink to="/" className="flex items-center px-6 mb-8">
             <img src="/images/CCPS.png" alt="Logo" className="h-10 w-10" />
