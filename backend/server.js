@@ -11,6 +11,7 @@ import resumeRouter from "./routes/resume.routes.js";
 import jobRouter from "./routes/jobs.routes.js"
 import studentRouter from "./routes/student.routes.js"
 import alumniRouter from "./routes/alumni.routes.js"
+import applicationRoutes from './routes/application.routes.js';
 
 import dotenv from "dotenv";
 dotenv.config({});
@@ -39,6 +40,7 @@ app.use("/api/threads", threadRoutes);
 app.use("/api/stats",statsRouter);
 app.use("/api/referrals",referalRouter);
 app.use("/api/resume",resumeRouter);
+app.use("/api/applications", applicationRoutes);
 
 app.listen(port, () => {
   connectDB();

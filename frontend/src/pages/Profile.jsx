@@ -42,8 +42,11 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-xl font-semibold text-gray-700">Loading Profile...</p>
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar />
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-xl font-semibold text-gray-700">Loading Profile...</p>
+          </div>
       </div>
     );
   }
