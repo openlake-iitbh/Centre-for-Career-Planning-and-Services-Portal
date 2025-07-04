@@ -3,8 +3,6 @@ import { jobCreate,jobUpdate,jobRelevanceScoreUpvote,jobRelevanceScoreDownvote,j
 
 const router = express.Router();
 
-//making the routes
-router.route("").get();
 router.post("/",jobCreate)
 router.put("/:id",jobUpdate)
 router.delete("/:id",jobDelete)

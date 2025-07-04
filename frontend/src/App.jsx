@@ -21,6 +21,8 @@ import DiscussionForum from './pages/DiscussionForum';
 import AddThread from './components/AddThread';
 import Profile from './pages/Profile';
 import Alumni from './pages/Alumni';
+import AdminJobList from './pages/AdminJobList';
+import JobApplicants from './pages/JobApplications';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -45,6 +47,8 @@ function App() {
         <Route path='/resumebuilder' element={<ResumeBuilder/>} />
         <Route path='/alumni' element={<Alumni/>} />
         {!authUser && <Route path='/reset-password/:resetToken' element={<ResetPasswordPage />} />}
+        <Route path="/admin/jobs" element={<AdminJobList />} />
+        <Route path="/admin/job/:jobId/applicants" element={<JobApplicants />} />
       </Routes>
       <Toaster />
     </>
