@@ -1,13 +1,10 @@
 import mongoose from "mongoose";
 
-const studentSchema = new mongoose.Schema({
-
-    
+const studentSchema = new mongoose.Schema({ 
     ReferenceObject:{
         type:mongoose.Schema.Types.ObjectID,
         ref:'User'
     },
-
 
     Discipline:{
         type: String,
