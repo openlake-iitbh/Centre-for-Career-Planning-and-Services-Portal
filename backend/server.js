@@ -12,6 +12,7 @@ import jobRouter from "./routes/jobs.routes.js"
 import studentRouter from "./routes/student.routes.js"
 import alumniRouter from "./routes/alumni.routes.js"
 import profileRouter from "./routes/profile.routes.js"
+import healthRoutes from './routes/health.routes.js';
 
 import dotenv from "dotenv";
 dotenv.config({});
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // api's
+app.use('/api', healthRoutes); 
 app.use("/api/jobs",jobRouter);
 app.use("/api/alumni",alumniRouter);
 app.use("/api/student",studentRouter);
