@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/profile";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api/profile";
 
 export const getStudentProfile = async () => {
   const res = await fetch(BASE_URL, {
