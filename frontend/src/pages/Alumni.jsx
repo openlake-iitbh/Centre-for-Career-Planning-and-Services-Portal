@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import useGetAlumni from "../api/useGetAlumni";
 import useGetAllAlumni from "../api/useGetAllAlumni";
 
-// see the dummy data below in case of rendering anything for help.
+// see the dummy data after the code in case of rendering anything for help.
 
 const Alumni = () => {
   const [search, setSearch] = useState("");
