@@ -22,7 +22,7 @@ export const protectRoute = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
+        req.user = user;
         req.userId = user._id;
         next();
         
@@ -30,4 +30,13 @@ export const protectRoute = async (req, res, next) => {
         console.log("Error in protectRoute middleware: ", error.message);
         res.status(500).json({ message: "Internal server error" });
     }
+};
+
+export const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ success: false, message: "Access denied" });
+    }
+    next();
+  };
 };
