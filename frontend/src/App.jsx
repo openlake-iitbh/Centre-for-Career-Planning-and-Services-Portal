@@ -23,6 +23,7 @@ import Profile from './pages/Profile';
 import Alumni from './pages/Alumni';
 import AdminJobList from './pages/AdminJobList';
 import JobApplicants from './pages/JobApplications';
+import Applications from './pages/Applications';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -47,9 +48,25 @@ function App() {
         <Route path='/resumebuilder' element={<ResumeBuilder/>} />
         <Route path='/alumni' element={<Alumni/>} />
         {!authUser && <Route path='/reset-password/:resetToken' element={<ResetPasswordPage />} />}
-        <Route path="/admin/jobs" element={<AdminJobList />} />
-        <Route path="/admin/job/:jobId/applicants" element={<JobApplicants />} />
+        <Route
+          path="/admin/jobs"
+          element={authUser?.role === "admin" ? <AdminJobList /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin/job/:jobId/applicants"
+          element={authUser?.role === "admin" ? <JobApplicants /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/applications"
+          element={
+            authUser
+              ? <Applications />
+              : <Navigate to="/login" replace />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      
       <Toaster />
     </>
   );
