@@ -1,77 +1,44 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import {
   getStudentProfile,
   updateStudentProfile,
   createStudentProfile,
 } from "../api/useProfile";
-import { useAuthContext } from "../context/AuthContext";
 
-const Profile = () => {
+const initialData = {
+  name: "",
+  email: "",
+  studentID: "",
+  discipline: "",
+  program: "",
+  cgpa: "",
+};
+
+export default function Profile() {
   const { authUser } = useAuthContext();
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    studentID: "",
-    discipline: "",
-    program: "",
-    cgpa: "",
-  });
+  const [profile, setProfile] = useState(initialData);
+  const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ ...profile });
 
-  const isIncompleteProfile =
+  const isIncomplete =
     !profile.studentID || !profile.discipline || !profile.program || !profile.cgpa;
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setLoading(true);
-        const data = await getStudentProfile(authUser._id);
-
-        setProfile({
-          name: data.name || "",
-          email: data.email || "",
-          studentID: data.studentID || "",
-          discipline: data.discipline || "",
-          program: data.program || "",
-          cgpa: data.cgpa || "",
-        });
-
-        setFormData({
-          name: data.name || "",
-          email: data.email || "",
-          studentID: data.studentID || "",
-          discipline: data.discipline || "",
-          program: data.program || "",
-          cgpa: data.cgpa || "",
-        });
-      } catch (error) {
-        console.warn("No existing student profile found.");
-        setProfile({
-          name: authUser.name || "",
-          email: authUser.email || "",
-          studentID: "",
-          discipline: "",
-          program: "",
-          cgpa: "",
-        });
-
-        setFormData({
-          name: authUser.name || "",
-          email: authUser.email || "",
-          studentID: "",
-          discipline: "",
-          program: "",
-          cgpa: "",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
+    if (!authUser?._id) return;
+    setLoading(true);
+    getStudentProfile(authUser._id)
+      .then(data => {
+        setProfile({ ...initialData, ...data });
+        setFormData({ ...initialData, ...data });
+      })
+      .catch(() => {
+        setProfile(prev => ({ ...prev, name: authUser.name, email: authUser.email }));
+        setFormData(prev => ({ ...prev, name: authUser.name, email: authUser.email }));
+      })
+      .finally(() => setLoading(false));
   }, [authUser]);
 
   const handleChange = (e) => {
@@ -80,40 +47,19 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const payload = { ...formData, batch: 2025, status: "active" };
     try {
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        studentID: formData.studentID,
-        discipline: formData.discipline,
-        program: formData.program,
-        cgpa: formData.cgpa,
-        batch: 2025, // Replace with dynamic year if needed
-        status: "active", // Adjust as per your requirement
-      };
-
       if (!profile.studentID) {
-        // Profile doesn't exist; create it
         await createStudentProfile(authUser._id, payload);
       } else {
-        // Profile exists; update it
         await updateStudentProfile(authUser._id, payload);
       }
-
-      setShowForm(false);
-
       const updated = await getStudentProfile(authUser._id);
-      setProfile({
-        name: updated.name || "",
-        email: updated.email || "",
-        studentID: updated.studentID || "",
-        discipline: updated.discipline || "",
-        program: updated.program || "",
-        cgpa: updated.cgpa || "",
-      });
-    } catch (error) {
-      console.error("Error saving profile:", error.message);
+      setProfile({ ...initialData, ...updated });
+      setFormData({ ...initialData, ...updated });
+      setShowForm(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -121,330 +67,115 @@ const Profile = () => {
     return (
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-xl font-semibold text-gray-700">Loading Profile...</p>
-          </div>
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-xl font-medium text-gray-600">Loading Profile...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 pt-20">
       <Sidebar />
-      <div className="flex-1 p-8">
-        <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Student Profile</h2>
-
-          {isIncompleteProfile && !showForm && (
-            <div className="mb-4 text-center text-red-500 font-semibold">
-              Your profile is incomplete. Please update your profile.
-            </div>
-          )}
-
-          {!showForm ? (
-            <div className="space-y-4 text-lg text-gray-700">
-              <div><strong>Name:</strong> {profile.name || "N/A"}</div>
-              <div><strong>Email:</strong> {profile.email || "N/A"}</div>
-              <div><strong>ID Number:</strong> {profile.studentID || "N/A"}</div>
-              <div><strong>Discipline:</strong> {profile.discipline || "N/A"}</div>
-              <div><strong>Program:</strong> {profile.program || "N/A"}</div>
-              <div><strong>CGPA:</strong> {profile.cgpa || "N/A"}</div>
-              <button
-                onClick={() => setShowForm(true)}
-                className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Update Profile
-              </button>
-            </div>
-          ) : (
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Name"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="studentID"
-                value={formData.studentID}
-                onChange={handleChange}
-                placeholder="Student ID"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="discipline"
-                value={formData.discipline}
-                onChange={handleChange}
-                placeholder="Discipline"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="text"
-                name="program"
-                value={formData.program}
-                onChange={handleChange}
-                placeholder="Program"
-                className="w-full border p-2 rounded"
-              />
-              <input
-                type="number"
-                name="cgpa"
-                step="0.01"
-                min="0"
-                max="10"
-                value={formData.cgpa}
-                onChange={handleChange}
-                placeholder="CGPA"
-                className="w-full border p-2 rounded"
-              />
-              <div className="flex gap-4 justify-center">
-                <button
-                  type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          )}
+      <main className="flex-1 p-6 flex justify-center items-start">
+        <div className="w-full max-w-3xl bg-white  shadow-md overflow-hidden">
+          <div className="bg-teal-600 p-6">
+            <h1 className="text-3xl font-bold text-white">Student Profile</h1>
+          </div>
+          <div className="p-6">
+            {!showForm ? (
+              <>
+                {isIncomplete && (
+                  <div className="mb-4 px-4 py-2 bg-red-100 text-red-700 rounded">
+                    Your profile is incomplete. Please update the missing fields.
+                  </div>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                  <div>
+                    <p className="font-semibold">Name</p>
+                    <p>{profile.name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">Email</p>
+                    <p>{profile.email || "N/A"}</p>
+                  </div>
+                  {!isIncomplete && (
+                    <>
+                      <div>
+                        <p className="font-semibold">Student ID</p>
+                        <p>{profile.studentID}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold">Discipline</p>
+                        <p>{profile.discipline}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold">Program</p>
+                        <p>{profile.program}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold">CGPA</p>
+                        <p>{profile.cgpa}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="inline-block bg-teal-600 hover:bg-teal-700 text-white py-2 px-5 rounded-lg font-medium transition"
+                  >
+                    {isIncomplete ? "Complete Profile" : "Edit Profile"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { name: 'name', label: 'Full Name', type: 'text' },
+                    { name: 'email', label: 'Email Address', type: 'email' },
+                    { name: 'studentID', label: 'Student ID', type: 'text' },
+                    { name: 'discipline', label: 'Discipline', type: 'text' },
+                    { name: 'program', label: 'Program', type: 'text' },
+                    { name: 'cgpa', label: 'CGPA', type: 'number', step: '0.01', min: '0', max: '10' },
+                  ].map(field => (
+                    <div key={field.name} className="flex flex-col">
+                      <label className="mb-1 font-semibold text-gray-600">{field.label}</label>
+                      <input
+                        type={field.type}
+                        name={field.name}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        step={field.step}
+                        min={field.min}
+                        max={field.max}
+                        className="border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-center space-x-4 mt-4">
+                  <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 font-medium transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="bg-gray-400 hover:bg-gray-500 text-white py-2 px-6  font-medium transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
-};
-
-export default Profile;
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import Sidebar from "../components/Sidebar";
-// import { getStudentProfile, updateStudentProfile } from "../api/useProfile";
-// import { useAuthContext } from "../context/AuthContext";
-
-// const Profile = () => {
-//   const { authUser } = useAuthContext();
-//   const [profile, setProfile] = useState({
-//     name: "",
-//     email: "",
-//     idNumber: "",
-//     discipline: "",
-//     program: "",
-//     cgpa: "",
-//   });
-//   const [loading, setLoading] = useState(false);
-//   const [showForm, setShowForm] = useState(false);
-//   const [formData, setFormData] = useState({ ...profile });
-
-//   // changes have to be made to fetch like the other data.
-//   const isIncompleteProfile = !profile.idNumber || !profile.discipline || !profile.program || !profile.cgpa;
-
-//   useEffect(() => {
-//     const fetchProfile = async () => {
-//       try {
-//         setLoading(true);
-//         const data = await getStudentProfile(authUser._id);
-        
-//         setProfile({
-//           name: data.name || "",
-//           email: data.email || "",
-//           idNumber: data.studentID || "",
-//           discipline: data.discipline || "",
-//           program: data.program || "",
-//           cgpa: data.cgpa || "",
-//         });
-//         setFormData({
-//           name: data.name || "",
-//           email: data.email || "",
-//           idNumber: data.studentID || "",
-//           discipline: data.discipline || "",
-//           program: data.program || "",
-//           cgpa: data.cgpa || "",
-//         });
-//       } catch (error) {
-//         console.error("Error fetching profile:", error.message);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchProfile();
-//   }, [authUser]);
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       await updateStudentProfile(authUser._id,{
-//         name: formData.name,
-//         email: formData.email,
-//         idNumber: formData.studentID,
-//         discipline: formData.discipline,
-//         program: formData.program,
-//         cgpa: formData.cgpa,
-//       });
-//       setShowForm(false);
-//       // Refresh the profile
-//       const updated = await getStudentProfile(authUser._id);
-//       setProfile({
-//         name: updated.name || "",
-//         email: updated.email || "",
-//         idNumber: updated.studentID || "",
-//         discipline: updated.discipline || "",
-//         program: updated.program || "",
-//         cgpa: updated.cgpa || "",
-//       });
-//     } catch (error) {
-//       console.error("Error updating profile:", error.message);
-//     }
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="flex justify-center items-center h-screen bg-gray-50">
-//         <p className="text-xl font-semibold text-gray-700">Loading Profile...</p>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-//       <Sidebar />
-//       <div className="flex-1 p-8">
-//         <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-6">
-//           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Student Profile</h2>
-
-//           {isIncompleteProfile && !showForm && (
-//             <div className="mb-4 text-center text-red-500 font-semibold">
-//               Your profile is incomplete. Please update your profile.
-              
-//               {/* <button
-//                 onClick={() => setShowForm(true)}
-//                 className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-//               >
-//                 Update Profile
-//               </button> */}
-//             </div>
-//           )}
-
-//           {!showForm ? (
-//             <div className="space-y-4 text-lg text-gray-700">
-//               <div><strong>Name:</strong> {profile.name || "N/A"}</div>
-//               <div><strong>Email:</strong> {profile.email || "N/A"}</div>
-//               <div><strong>ID Number:</strong> {profile.idNumber || "N/A"}</div>
-//               <div><strong>Discipline:</strong> {profile.discipline || "N/A"}</div>
-//               <div><strong>Program:</strong> {profile.program || "N/A"}</div>
-//               <div><strong>CGPA:</strong> {profile.cgpa || "N/A"}</div>
-//               <button
-//                 onClick={() => setShowForm(true)}
-//                 className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-//               >
-//                 Update Profile
-//               </button>
-//             </div>
-            
-//           ) : (
-//             <form className="space-y-4" onSubmit={handleSubmit}>
-//               <input
-//                 type="text"
-//                 name="name"
-//                 value={formData.name}
-//                 onChange={handleChange}
-//                 placeholder="Name"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <input
-//                 type="email"
-//                 name="email"
-//                 value={formData.email}
-//                 onChange={handleChange}
-//                 placeholder="Email"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <input
-//                 type="number"
-//                 name="studentID"
-//                 step="0.01"
-//                 min="0"
-//                 max="10"
-//                 value={formData.idNumber}
-//                 onChange={handleChange}
-//                 placeholder="studentID"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <input
-//                 type="text"
-//                 name="discipline"
-//                 value={formData.discipline}
-//                 onChange={handleChange}
-//                 placeholder="Discipline"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <input
-//                 type="text"
-//                 name="program"
-//                 value={formData.program}
-//                 onChange={handleChange}
-//                 placeholder="Program"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <input
-//                 type="number"
-//                 name="cgpa"
-//                 step="0.01"
-//                 min="0"
-//                 max="10"
-//                 value={formData.cgpa}
-//                 onChange={handleChange}
-//                 placeholder="CGPA"
-//                 className="w-full border p-2 rounded"
-//               />
-//               <div className="flex gap-4 justify-center">
-//                 <button
-//                   type="submit"
-//                   className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-//                 >
-//                   Save Changes
-//                 </button>
-//                 <button
-//                   type="button"
-//                   onClick={() => setShowForm(false)}
-//                   className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-//                 >
-//                   Cancel
-//                 </button>
-//               </div>
-//             </form>
-//           )}
-          
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Profile;
+}
