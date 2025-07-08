@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
         const user = await User.findOne({ email });
-
+        
         const verificationToken = Math.floor(100000 + (Math.random() * 900000)).toString();
 
         if (user) {
@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
                 user.name = name; 
                 user.password = hashedPassword;
                 user.verificationToken = verificationToken;
-                user.verificationTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+                user.verificationTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; 
 
                 await user.save();
 
