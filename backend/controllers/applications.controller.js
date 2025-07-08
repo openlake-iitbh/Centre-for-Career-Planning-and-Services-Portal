@@ -11,7 +11,7 @@ export const getStudentApplications = async (req, res) => {
     const offCampusApplications = [];
 
     for (let app of applications) {
-      if (!app.jobId) continue;
+      if (!app.jobId || !app.jobId.Type) continue;
 
       const jobType = app.jobId.Type;
 
@@ -28,6 +28,7 @@ export const getStudentApplications = async (req, res) => {
       offCampusApplications
     });
   } catch (err) {
+    console.log("Error getStudentApplications:", err);
     res.status(500).json({
       success: false,
       message: "Failed to fetch student applications",
@@ -39,34 +40,55 @@ export const getStudentApplications = async (req, res) => {
 export const applyToJob = async (req, res) => {
   try {
     const studentId = req.userId;
-    const { jobId } = req.body;
+    const { jobId, resume, phone, address } = req.body;
+
+    if (
+      !jobId ||
+      !resume ||
+      !phone ||
+      !address
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields required" });
+    }
 
     const job = await JobPosting.findById(jobId);
     if (!job) {
-      return res.status(404).json({ success: false, message: "Job not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Job not found" });
     }
 
-    const existingApplication = await JobApplication.findOne({ studentId, jobId });
-    if (existingApplication) {
-      return res.status(400).json({ success: false, message: "Already applied to this job" });
+    const alreadyApplied = await JobApplication.findOne({ studentId, jobId });
+    if (alreadyApplied) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Already applied" });
     }
 
-    const application = new JobApplication({ studentId, jobId });
+    const application = new JobApplication({
+      studentId,
+      jobId,
+      resume,
+      phone,
+      address,
+      status: "applied"
+    });
     await application.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Job application submitted successfully",
-      application
-    });
+    return res
+      .status(201)
+      .json({ success: true, message: "Application submitted", application });
+
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to apply to job",
-      error: err.message
-    });
+    console.error("Apply error:", err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server Error", error: err.message });
   }
 };
+
 
 export const cancelApplication = async (req, res) => {
   try {
