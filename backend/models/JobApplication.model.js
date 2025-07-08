@@ -8,19 +8,26 @@ const jobApplicationSchema = new mongoose.Schema({
   },
   jobId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "jobPosting",
+    ref: "JobPosting",
+    required: true
+  },
+  resume: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
     required: true
   },
   status: {
     type: String,
-    enum: ["applied", "under review", "selected", "rejected"],
     default: "applied"
-  },
-  appliedAt: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });
 
 const JobApplication = mongoose.model("JobApplication", jobApplicationSchema);
 export default JobApplication;
