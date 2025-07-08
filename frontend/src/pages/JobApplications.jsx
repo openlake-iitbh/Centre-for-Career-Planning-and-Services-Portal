@@ -6,6 +6,7 @@ const JobApplicants = () => {
   const { jobId } = useParams();
   const [applicants, setApplicants] = useState([]);
   const backendUrl = "http://localhost:3000";
+
   const fetchApplicants = async () => {
     try {
       const res = await axios.get(`${backendUrl}/api/applications/job/${jobId}/applicants`, {
@@ -23,7 +24,7 @@ const JobApplicants = () => {
   const updateStatus = async (id, status) => {
     try {
       await axios.put(
-        `/api/applications/status/${id}`,
+        `${backendUrl}/api/applications/status/${id}`,
         { status },
         {
           headers: {
@@ -44,30 +45,39 @@ const JobApplicants = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
-      <div className="space-y-4">
-        {applicants.map((app) => (
-          <div
-            key={app._id}
-            className="bg-gray-100 rounded-lg p-4 shadow flex justify-between items-center"
-          >
-            <div>
-              <p className="font-semibold">{app.studentId.name}</p>
-              <p className="text-sm text-gray-600">{app.studentId.email}</p>
-              <p>Status: <span className="font-medium">{app.status}</span></p>
-            </div>
-            <select
-              className="border rounded p-1"
-              value={app.status}
-              onChange={(e) => updateStatus(app._id, e.target.value)}
+
+      {applicants.length === 0 ? (
+        <p className="text-gray-500">No applicants yet.</p>
+      ) : (
+        <div className="space-y-4">
+          {applicants.map((app) => (
+            <div
+              key={app._id}
+              className="bg-gray-100 rounded-lg p-4 shadow flex justify-between items-center"
             >
-              <option>applied</option>
-              <option>under review</option>
-              <option>selected</option>
-              <option>rejected</option>
-            </select>
-          </div>
-        ))}
-      </div>
+              <div>
+                <p className="font-semibold">
+                  {app.studentId?.name || "Unknown Name"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {app.studentId?.email || "No email"}
+                </p>
+                <p>Status: <span className="font-medium">{app.status}</span></p>
+              </div>
+              <select
+                className="border rounded p-1"
+                value={app.status}
+                onChange={(e) => updateStatus(app._id, e.target.value)}
+              >
+                <option value="applied">applied</option>
+                <option value="under review">under review</option>
+                <option value="selected">selected</option>
+                <option value="rejected">rejected</option>
+              </select>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

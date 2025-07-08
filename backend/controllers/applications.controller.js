@@ -5,7 +5,6 @@ import User from "../models/user.model.js";
 export const getStudentApplications = async (req, res) => {
   try {
     const studentId = req.userId;
-    console.log("🔍 getStudentApplications hit; req.userId =", req.userId);
     const applications = await JobApplication.find({ studentId }).populate("jobId");
 
     const onCampusApplications = [];

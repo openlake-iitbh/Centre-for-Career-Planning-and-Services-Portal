@@ -15,7 +15,6 @@ export const jobCreate = async (req, res) => {
             author,
             relevanceScore
         } = req.body;
-         console.log("entered")
         // Create a new job posting instance
         const newJobPosting = new JobPosting({
             jobTitle,
