@@ -21,9 +21,10 @@ import DiscussionForum from './pages/DiscussionForum';
 import AddThread from './components/AddThread';
 import Profile from './pages/Profile';
 import Alumni from './pages/Alumni';
-import AdminJobList from './pages/AdminJobList';
-import JobApplicants from './pages/JobApplications';
+import AdminJobList from './pages/admin/AdminJobList';
+import JobApplicants from './pages/admin/JobApplications';
 import Applications from './pages/Applications';
+import CreateJob from './pages/admin/CreateJob';
 
 function App() {
   const { authUser } = useAuthContext();
@@ -65,6 +66,10 @@ function App() {
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="/admin/create-job"
+          element={authUser?.role === "admin" ? <CreateJob /> : <Navigate to="/" />}
+        />
       </Routes>
       
       <Toaster />
