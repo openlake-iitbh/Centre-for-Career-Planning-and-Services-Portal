@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { fetchApplicants, updateApplicationStatus } from "../../api/useApplications"; 
 const JobApplicants = () => {
   const { jobId } = useParams();
   const [applicants, setApplicants] = useState([]);
-  const backendUrl = "http://localhost:3000";
 
-  const fetchApplicants = async () => {
+  const loadApplicants = async () => {
     try {
-      const res = await axios.get(`${backendUrl}/api/applications/job/${jobId}/applicants`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("ccps-token")}`,
-        },
-      });
-      console.log("Applicants response:", res.data);
-      setApplicants(res.data.applicants || []);
+      const data = await fetchApplicants(jobId);
+      setApplicants(data);
     } catch (error) {
-      console.error("Error fetching applicants:", error.response?.data || error.message);
+      console.error("Error fetching applicants:", error);
     }
   };
 
-  const updateStatus = async (id, status) => {
+  const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(
-        `${backendUrl}/api/applications/status/${id}`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ccps-token")}`,
-          },
-        }
-      );
-      await fetchApplicants();
+      await updateApplicationStatus(id, status);
+      await loadApplicants();
     } catch (error) {
-      console.error("Error updating status:", error.response?.data || error.message);
+      console.error("Error updating status:", error);
     }
   };
 
   useEffect(() => {
-    fetchApplicants();
+    loadApplicants();
   }, [jobId]);
 
   return (
@@ -67,7 +52,7 @@ const JobApplicants = () => {
               <select
                 className="border rounded p-1"
                 value={app.status}
-                onChange={(e) => updateStatus(app._id, e.target.value)}
+                onChange={(e) => handleStatusChange(app._id, e.target.value)}
               >
                 <option value="applied">applied</option>
                 <option value="under review">under review</option>
