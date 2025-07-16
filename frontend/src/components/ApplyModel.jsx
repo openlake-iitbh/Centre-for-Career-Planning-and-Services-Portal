@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { applyToJob } from "../api/useApply";
 import { toast } from "react-hot-toast";
 
-const ApplyModal = ({ jobId, onClose, onApplied }) => {
+const ApplyModal = ({ jobId, applicationLink, onClose, onApplied }) => {
   const [formData, setFormData] = useState({
     resume: "",
     phone: "",
@@ -43,11 +43,10 @@ const ApplyModal = ({ jobId, onClose, onApplied }) => {
         <h2 className="text-xl font-semibold mb-4">Apply to this Job</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium">Resume URL</label>
+            <label className="block text-sm font-medium">Resume URL (optional)</label>
             <input
               type="url"
               name="resume"
-              required
               value={formData.resume}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
@@ -55,11 +54,10 @@ const ApplyModal = ({ jobId, onClose, onApplied }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Phone</label>
+            <label className="block text-sm font-medium">Phone (optional)</label>
             <input
               type="tel"
               name="phone"
-              required
               value={formData.phone}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
@@ -67,16 +65,29 @@ const ApplyModal = ({ jobId, onClose, onApplied }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Address</label>
+            <label className="block text-sm font-medium">Address (optional)</label>
             <textarea
               name="address"
-              required
               value={formData.address}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
               placeholder="Your address"
             />
           </div>
+
+          {applicationLink && (
+            <div className="text-sm text-right">
+              <a
+                href={applicationLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                Click here to apply externally →
+              </a>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-2">
             <button
               type="button"
@@ -95,7 +106,7 @@ const ApplyModal = ({ jobId, onClose, onApplied }) => {
             </button>
           </div>
         </form>
-      </div>
+      </div>  
     </div>
   );
 };
