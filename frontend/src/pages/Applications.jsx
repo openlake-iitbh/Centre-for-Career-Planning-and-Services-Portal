@@ -10,7 +10,7 @@ const Applications = () => {
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const loadAll = async () => {
     try {
@@ -32,10 +32,11 @@ const Applications = () => {
     loadAll();
   }, []);
 
-  const openApplyModal = (jobId) => {
-    setSelectedJobId(jobId);
+  const openApplyModal = (job) => {
+    setSelectedJob(job);
     setIsModalOpen(true);
   };
+
 
   const handleApplied = async () => {
     try {
@@ -81,7 +82,7 @@ const Applications = () => {
                     </span>
                   ) : (
                     <button
-                      onClick={() => openApplyModal(job._id)}
+                      onClick={() => openApplyModal(job)}
                       className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
                       Apply
@@ -97,9 +98,10 @@ const Applications = () => {
         </ul>
       </div>
 
-      {isModalOpen && selectedJobId && (
+      {isModalOpen && selectedJob && (
         <ApplyModal
-          jobId={selectedJobId}
+          jobId={selectedJob._id}
+          applicationLink={selectedJob.ApplicationLink}
           onClose={() => setIsModalOpen(false)}
           onApplied={handleApplied}
         />

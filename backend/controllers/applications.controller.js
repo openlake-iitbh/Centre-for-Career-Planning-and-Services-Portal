@@ -42,16 +42,16 @@ export const applyToJob = async (req, res) => {
     const studentId = req.userId;
     const { jobId, resume, phone, address } = req.body;
 
-    if (
-      !jobId ||
-      !resume ||
-      !phone ||
-      !address
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields required" });
-    }
+    // if (
+    //   !jobId ||
+    //   !resume ||
+    //   !phone ||
+    //   !address
+    // ) {
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, message: "All fields required" });
+    // }
 
     const job = await JobPosting.findById(jobId);
     if (!job) {
