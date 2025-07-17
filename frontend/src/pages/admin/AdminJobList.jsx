@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL+"/api" || 'http://localhost:3000/api';
+
 const AdminJobList = () => {
   const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ const AdminJobList = () => {
           return;
         }
 
-        const res = await axios.get("http://localhost:3000/api/jobs", {
+        const res = await axios.get(`${BASE_URL}/jobs`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
