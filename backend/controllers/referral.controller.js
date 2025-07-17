@@ -1,4 +1,4 @@
-import Referral from "../models/Referral.model.js";
+import Referral from "../models/referral.model.js";
 
 export const requestReferral = async (req, res) => {
     try {
