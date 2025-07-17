@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL+"/api/alumni" || 'http://localhost:3000/api/alumni';
 
 const useGetAllAlumni = () => {
   const [alumni, setAlumni] = useState([]);
@@ -8,7 +9,7 @@ const useGetAllAlumni = () => {
   const fetchAllAlumni = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3000/api/alumni");
+      const res = await fetch(`${BASE_URL}`);
       const data = await res.json();
 
       if (!res.ok || data.message) {

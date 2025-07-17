@@ -1,4 +1,5 @@
 import { useState } from 'react';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL+"/api" || 'http://localhost:3000/api';
 
 export const useResume = () => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ export const useResume = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/resume/generate', {
+      const response = await fetch(`${BASE_URL}/resume/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
