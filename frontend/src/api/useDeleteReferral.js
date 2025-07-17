@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL+"/api/referrals" || 'http://localhost:3000/api/referrals';
+
 export const useDeleteReferral = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState(null);
@@ -9,7 +11,7 @@ export const useDeleteReferral = () => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/referrals/${referralId}`, {
+      const response = await fetch(`${BASE_URL}/${referralId}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json'
